@@ -27,6 +27,7 @@ const cfgBytes = document.getElementById("cfg-bytes") as HTMLSelectElement;
 const cfgEcc = document.getElementById("cfg-ecc") as HTMLSelectElement;
 const cfgSize = document.getElementById("cfg-size") as HTMLInputElement;
 
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 const payloadCache = new Map<string, Uint8Array>();
 let generation = 0; // bumped on every restart; stale loops see it and die
 
@@ -46,8 +47,8 @@ async function main() {
     fileInput.addEventListener("change", async () => {
       const f = fileInput.files?.[0];
       if (!f) return;
-      if (f.size > 2 * 1024 * 1024) {
-        specs.textContent = `✗ file too large — max 2 MB`;
+      if (f.size > MAX_UPLOAD_BYTES) {
+        specs.textContent = `✗ file too large — max ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)} MB`;
         return;
       }
       specs.textContent = `loading uploaded file…`;
@@ -57,7 +58,7 @@ async function main() {
         payloadCache.set("uploaded", bytes);
         cfgPayload.value = "uploaded";
         void startStream();
-      } catch (err) {
+      } catch {
         specs.textContent = `✗ couldn't read file`;
       }
     });

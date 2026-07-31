@@ -23,7 +23,7 @@
         <label style="display:flex;align-items:center;gap:8px">
           upload
           <input id="file-input" type="file" accept="image/*" />
-          <small style="opacity:0.9">max 2 MB</small>
+          <small style="opacity:0.9">max 4 MB</small>
         </label>
         <label>
           tx fps
@@ -31,9 +31,9 @@
             <option>10</option>
             <option>15</option>
             <option>20</option>
-            <option selected>24</option>
+            <option>24</option>
             <option>30</option>
-            <option>60</option>
+            <option selected>60</option>
           </select>
         </label>
         <label>
@@ -41,10 +41,10 @@
           <select id="cfg-bytes">
             <option>500</option>
             <option>1000</option>
-            <option selected>1465</option>
+            <option>1465</option>
             <option>1850</option>
             <option>2331</option>
-            <option>2953</option>
+            <option selected>2953</option>
           </select>
         </label>
         <label>
@@ -64,6 +64,8 @@
       <div class="hint" style="text-align: left; padding-top: 8px">
         Changes restart the stream — the receiver resets automatically (new
         session id in the frame headers; that's the fountain protocol's gift).
+        For fastest transfers, use 60 FPS and 2953 bytes/frame. Uploaded images
+        can be up to 4 MB.
       </div>
     </details>
     <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>

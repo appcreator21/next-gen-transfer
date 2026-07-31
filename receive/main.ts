@@ -12,6 +12,7 @@ import { LTDecoder } from "../shared/fountain";
 import { fnv1a, parseFrame } from "../shared/protocol";
 
 const OVERHEAD_EST = 1.18; // expected frames ≈ K × this (robust-soliton ε)
+const MAX_DECODE_WIDTH = 960;
 
 const startBtn = document.getElementById("start") as HTMLButtonElement;
 const video = document.getElementById("video") as HTMLVideoElement;
@@ -118,6 +119,7 @@ function scheduleFrame(gen: number) {
 }
 
 const grab = document.createElement("canvas");
+const grabCtx = grab.getContext("2d", { willReadFrequently: true })!;
 let frameId = 0;
 
 function captureFrame() {
@@ -127,15 +129,16 @@ function captureFrame() {
   captureTimes.push(performance.now());
   const slot = busy.indexOf(false);
   if (slot === -1) return; // all workers busy — drop the frame, no harm done
-  if (grab.width !== vw || grab.height !== vh) {
-    grab.width = vw;
-    grab.height = vh;
+  const decodeWidth = Math.min(vw, MAX_DECODE_WIDTH);
+  const decodeHeight = Math.round((decodeWidth * vh) / vw);
+  if (grab.width !== decodeWidth || grab.height !== decodeHeight) {
+    grab.width = decodeWidth;
+    grab.height = decodeHeight;
   }
-  const ctx = grab.getContext("2d", { willReadFrequently: true })!;
-  ctx.drawImage(video, 0, 0);
-  const img = ctx.getImageData(0, 0, vw, vh);
+  grabCtx.drawImage(video, 0, 0, decodeWidth, decodeHeight);
+  const img = grabCtx.getImageData(0, 0, decodeWidth, decodeHeight);
   busy[slot] = true;
-  workers[slot]!.postMessage({ id: frameId++, buf: img.data.buffer, w: vw, h: vh }, [
+  workers[slot]!.postMessage({ id: frameId++, buf: img.data.buffer, w: decodeWidth, h: decodeHeight }, [
     img.data.buffer,
   ]);
 }
