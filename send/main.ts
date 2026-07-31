@@ -71,12 +71,12 @@ async function main() {
   const fastBtn = document.getElementById("fast-mode") as HTMLButtonElement | null;
   if (fastBtn) {
     fastBtn.addEventListener("click", () => {
-      // Fast preset: highest FPS and largest bytes/frame (V40), low ECC for max goodput.
-      cfgFps.value = "60";
+      // Fast preset: 30 FPS and largest bytes/frame (V40), low ECC for max goodput.
+      cfgFps.value = "30";
       cfgBytes.value = "2953";
       cfgEcc.value = "L";
       cfgSize.value = "900";
-      specs.textContent = `Fast mode — 60 FPS · 2953 B/frame · ECC L`;
+      specs.textContent = `Fast mode — 30 FPS · 2953 B/frame · ECC L`;
       void startStream();
     });
   }

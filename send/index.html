@@ -3,79 +3,94 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Optical Transfer — send</title>
+    <title>DECIMEN — Send image</title>
     <link rel="stylesheet" href="../shared/style.css" />
   </head>
   <body>
-    <h1>DECIMEN <small>— Fountain QR File Transfer</small></h1>
-    <div class="hint" id="specs">loading payload…</div>
-    <details class="settings">
-      <summary>Settings</summary>
-      <div class="row">
-        <label>
-          payload
-          <select id="cfg-payload">
-            <option value="../success.png" selected>512 KB image</option>
-            <option value="../success-2mb.png">2 MB image</option>
-            <option value="uploaded">(uploaded image)</option>
-          </select>
-        </label>
-        <label style="display:flex;align-items:center;gap:8px">
-          upload
-          <input id="file-input" type="file" accept="image/*" />
-          <small style="opacity:0.9">max 4 MB</small>
-        </label>
-        <label>
-          tx fps
-          <select id="cfg-fps">
-            <option>10</option>
-            <option>15</option>
-            <option>20</option>
-            <option>24</option>
-            <option>30</option>
-            <option selected>60</option>
-          </select>
-        </label>
-        <label>
-          bytes / frame
-          <select id="cfg-bytes">
-            <option>500</option>
-            <option>1000</option>
-            <option>1465</option>
-            <option>1850</option>
-            <option>2331</option>
-            <option selected>2953</option>
-          </select>
-        </label>
-        <label>
-          error correction
-          <select id="cfg-ecc">
-            <option selected>L</option>
-            <option>M</option>
-            <option>Q</option>
-            <option>H</option>
-          </select>
-        </label>
-        <label>
-          display size
-          <input id="cfg-size" type="range" min="300" max="1200" step="50" value="900" />
-        </label>
-      </div>
-      <div class="hint" style="text-align: left; padding-top: 8px">
-        Changes restart the stream — the receiver resets automatically (new
-        session id in the frame headers; that's the fountain protocol's gift).
-        For fastest transfers, use 60 FPS and 2953 bytes/frame. Uploaded images
-        can be up to 4 MB.
-      </div>
-    </details>
-    <div style="text-align:center; margin:10px 0">
-      <button id="fast-mode">Fast mode</button>
-    </div>
-    <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
-    <div class="hint">
-      Max screen brightness helps. The stream loops forever — stop when the
-      receiver says done.
-    </div>
+    <header class="page-header">
+      <a class="brand" href="../">DECIMEN</a>
+      <nav class="page-nav">
+        <a href="../">Home</a>
+        <a href="../receive">Receive</a>
+      </nav>
+    </header>
+    <main class="main-content">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Send mode</p>
+            <h1>Stream uploaded images as an optimized animated QR fountain.</h1>
+            <p>Upload a file, choose the transfer profile, and display the sender screen. The receiver rebuilds the image from any decoded frames without network or pairing.</p>
+            <div class="hero-actions">
+              <button id="fast-mode">Fast mode</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><h2>Sender controls</h2></div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="cfg-payload">Payload</label>
+                <select id="cfg-payload">
+                  <option value="../success.png" selected>512 KB sample image</option>
+                  <option value="../success-2mb.png">2 MB sample image</option>
+                  <option value="uploaded">Uploaded image</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="file-input">Upload image</label>
+                <input id="file-input" type="file" accept="image/*" />
+                <small>Max 4 MB</small>
+              </div>
+              <div class="field">
+                <label for="cfg-fps">Frame rate</label>
+                <select id="cfg-fps">
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                  <option>24</option>
+                  <option selected>30</option>
+                  <option>60</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-bytes">Bytes per frame</label>
+                <select id="cfg-bytes">
+                  <option>500</option>
+                  <option>1000</option>
+                  <option>1465</option>
+                  <option>1850</option>
+                  <option>2331</option>
+                  <option selected>2953</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-ecc">Error correction</label>
+                <select id="cfg-ecc">
+                  <option selected>L</option>
+                  <option>M</option>
+                  <option>Q</option>
+                  <option>H</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-size">Display size</label>
+                <input id="cfg-size" type="range" min="300" max="1200" step="50" value="900" />
+              </div>
+            </div>
+            <p class="settings-info">Fast mode picks 30 FPS with 2953 bytes/frame and low ECC for the best sender throughput. The receiver handles the rest.</p>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-title"><h2>Live sender</h2></div>
+        <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
+        <div id="specs" class="hint">Loading payload…</div>
+      </section>
+      <section class="card">
+        <div class="card-title"><h2>Ready to transfer</h2></div>
+        <p class="hint">Max screen brightness helps. Keep the receiver centered on the code. The stream loops forever — stop when the receiver says done.</p>
+      </section>
+    </main>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>

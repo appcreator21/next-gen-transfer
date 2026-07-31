@@ -3,21 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Optical Transfer — fountain-coded QR file transfer</title>
+    <title>DECIMEN — Offline Image Transfer</title>
     <link rel="stylesheet" href="./shared/style.css" />
   </head>
   <body>
-    <h1>DECIMEN <small>— Fountain QR File Transfer (PoC)</small></h1>
-    <p class="hint">
-      Send a file between two devices using nothing but a screen and a camera.
-      Open <a href="./send/">send</a> on the device with the file (a laptop is
-      ideal) and <a href="./receive/">receive</a> on a phone, then point the
-      phone's camera at the flickering code.
-    </p>
-    <p class="hint">
-      No network path between the devices is used — the payload travels as
-      light. Fountain coding means the receiver can drop any frames, in any
-      order, and still reconstruct the file.
-    </p>
+    <header class="page-header">
+      <a class="brand" href=".">DECIMEN</a>
+      <nav class="page-nav">
+        <a href="./send">Send</a>
+        <a href="./receive">Receive</a>
+      </nav>
+    </header>
+    <main class="hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Offline image transfer</p>
+          <h1>Send images through animated QR without Wi-Fi, Bluetooth, or pairing.</h1>
+          <p>Upload a photo on one device, show the sender screen, and let another device rebuild the image from the camera. Works with payloads up to 4 MB.</p>
+          <div class="hero-actions">
+            <a class="button" href="./send">Send</a>
+            <a class="button" href="./receive">Receive</a>
+          </div>
+        </div>
+        <div class="features">
+          <div class="feature"><h3>Screen-to-camera</h3><p>No network needed — the sender displays QR frames and the receiver pulls data from the camera.</p></div>
+          <div class="feature"><h3>Fountain code</h3><p>Every frame is self-describing and redundant, so the receiver can recover the file even if some scans fail.</p></div>
+          <div class="feature"><h3>Large payloads</h3><p>Transfer images up to 4 MB using the built-in upload workflow and optimized QR streaming.</p></div>
+          <div class="feature"><h3>Fast setup</h3><p>Launch the sender quickly, press one button, and start receiving with minimal steps.</p></div>
+        </div>
+      </div>
+    </main>
   </body>
 </html>

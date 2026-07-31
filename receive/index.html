@@ -2,67 +2,77 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>Optical Transfer — receive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <title>DECIMEN — Receive image</title>
     <link rel="stylesheet" href="../shared/style.css" />
   </head>
   <body>
-    <h1>DECIMEN <small>— Fountain QR File Transfer</small></h1>
-    <div class="hint" id="stats">point the camera at the sender's code</div>
-    <details class="settings" id="settings">
-      <summary>Settings</summary>
-      <div class="row">
-        <label>
-          capture width
-          <select id="cfg-width">
-            <option>960</option>
-            <option selected>1280</option>
-            <option>1920</option>
-          </select>
-        </label>
-        <label>
-          capture fps
-          <select id="cfg-capfps">
-            <option>30</option>
-            <option selected>60</option>
-          </select>
-        </label>
-        <label>
-          decode workers
-          <select id="cfg-workers">
-            <option>1</option>
-            <option>2</option>
-            <option selected>3</option>
-            <option>4</option>
-          </select>
-        </label>
-      </div>
-      <div class="hint" style="text-align: left; padding-top: 8px">
-        Set before starting the camera. 1280-wide is the widest mode iOS runs
-        at a true 60 fps; the fps request is demanded with `exact` first
-        because `ideal: 60` silently delivers 30. The receiver also scales the
-        capture to 960px for faster decoding.
-      </div>
-    </details>
-    <button id="start">Start camera</button>
-    <div class="metrics" id="metrics" style="display: none">
-      <div class="metric"><div class="k">capture fps</div><div class="v" id="m-cap">—</div></div>
-      <div class="metric"><div class="k">decode fps</div><div class="v amber" id="m-dec">—</div></div>
-      <div class="metric"><div class="k">goodput</div><div class="v amber" id="m-rate">—</div></div>
-      <div class="metric"><div class="k">elapsed</div><div class="v" id="m-time">—</div></div>
-      <div class="metric"><div class="k">frames new/dup</div><div class="v" id="m-frames">—</div></div>
-      <div class="metric"><div class="k">blocks K</div><div class="v" id="m-k">—</div></div>
-      <div class="metric"><div class="k">block len</div><div class="v" id="m-block">—</div></div>
-      <div class="metric"><div class="k">payload</div><div class="v" id="m-payload">—</div></div>
-    </div>
-    <div class="preview" id="preview" style="display: none">
-      <video id="video" muted playsinline></video>
-    </div>
-    <div class="progress" id="progress" style="display: none"><div id="bar"></div></div>
-    <div id="result"></div>
+    <header class="page-header">
+      <a class="brand" href="../">DECIMEN</a>
+      <nav class="page-nav">
+        <a href="../">Home</a>
+        <a href="../send">Send</a>
+      </nav>
+    </header>
+    <main class="main-content">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Receive mode</p>
+            <h1>Scan the sender screen and rebuild the image automatically.</h1>
+            <p>Open the camera, point it at the animated QR stream, and wait for the transfer to finish. The receiver recovers the image even if some frames are skipped.</p>
+            <button id="start">Start camera</button>
+          </div>
+          <div class="card">
+            <div class="card-title"><h2>Receiver settings</h2></div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="cfg-width">Capture width</label>
+                <select id="cfg-width">
+                  <option>960</option>
+                  <option selected>1280</option>
+                  <option>1920</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-capfps">Capture fps</label>
+                <select id="cfg-capfps">
+                  <option selected>30</option>
+                  <option>60</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-workers">Decode workers</label>
+                <select id="cfg-workers">
+                  <option>1</option>
+                  <option>2</option>
+                  <option selected>3</option>
+                  <option>4</option>
+                </select>
+              </div>
+            </div>
+            <p class="settings-info">Use a higher capture width for more reliable scans. 30 FPS is the recommended default for most phones, and we scale the video to 960px for fast decode performance.</p>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-title"><h2>Live receiver</h2></div>
+        <div id="stats" class="hint">Point the camera at the sender's code.</div>
+        <div class="preview" id="preview" style="display: none"><video id="video" muted playsinline></video></div>
+        <div class="progress" id="progress" style="display: none"><div id="bar"></div></div>
+        <div class="metrics" id="metrics" style="display: none">
+          <div class="metric"><div class="k">capture fps</div><div class="v" id="m-cap">—</div></div>
+          <div class="metric"><div class="k">decode fps</div><div class="v amber" id="m-dec">—</div></div>
+          <div class="metric"><div class="k">goodput</div><div class="v amber" id="m-rate">—</div></div>
+          <div class="metric"><div class="k">elapsed</div><div class="v" id="m-time">—</div></div>
+          <div class="metric"><div class="k">frames new/dup</div><div class="v" id="m-frames">—</div></div>
+          <div class="metric"><div class="k">blocks K</div><div class="v" id="m-k">—</div></div>
+          <div class="metric"><div class="k">block len</div><div class="v" id="m-block">—</div></div>
+          <div class="metric"><div class="k">payload</div><div class="v" id="m-payload">—</div></div>
+        </div>
+        <div id="result"></div>
+      </section>
+    </main>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
