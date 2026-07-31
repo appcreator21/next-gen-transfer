@@ -19,76 +19,64 @@
         <div class="hero-grid">
           <div>
             <p class="eyebrow">Send mode</p>
-            <h1>Stream uploaded images as an optimized animated QR fountain.</h1>
-            <p>Upload a file, choose the transfer profile, and display the sender screen. The receiver rebuilds the image from any decoded frames without network or pairing.</p>
-            <div class="hero-actions">
-              <button id="fast-mode">Fast mode</button>
-            </div>
+            <h1>Upload an image and turn it into a live QR stream.</h1>
+            <p>Select a photo, then display the sender screen. The receiver rebuilds the image from the camera with no Wi‑Fi or pairing required.</p>
           </div>
-          <div class="card">
-            <div class="card-title"><h2>Sender controls</h2></div>
-            <div class="form-grid">
-              <div class="field">
-                <label for="cfg-payload">Payload</label>
-                <select id="cfg-payload">
-                  <option value="../success.png" selected>512 KB sample image</option>
-                  <option value="../success-2mb.png">2 MB sample image</option>
-                  <option value="uploaded">Uploaded image</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="file-input">Upload image</label>
-                <input id="file-input" type="file" accept="image/*" />
-                <small>Max 4 MB</small>
-              </div>
-              <div class="field">
-                <label for="cfg-fps">Frame rate</label>
-                <select id="cfg-fps">
-                  <option>10</option>
-                  <option>15</option>
-                  <option>20</option>
-                  <option>24</option>
-                  <option selected>30</option>
-                  <option>60</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="cfg-bytes">Bytes per frame</label>
-                <select id="cfg-bytes">
-                  <option>500</option>
-                  <option>1000</option>
-                  <option>1465</option>
-                  <option>1850</option>
-                  <option>2331</option>
-                  <option selected>2953</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="cfg-ecc">Error correction</label>
-                <select id="cfg-ecc">
-                  <option selected>L</option>
-                  <option>M</option>
-                  <option>Q</option>
-                  <option>H</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="cfg-size">Display size</label>
-                <input id="cfg-size" type="range" min="300" max="1200" step="50" value="900" />
-              </div>
+          <div class="card upload-shell">
+            <div class="upload-box">
+              <input id="file-input" type="file" accept="image/*" />
+              <div class="upload-icon">⬆</div>
+              <strong>Tap to upload an image</strong>
+              <div class="helper">PNG, JPG, HEIC up to 4 MB</div>
             </div>
-            <p class="settings-info">Fast mode picks 30 FPS with 2953 bytes/frame and low ECC for the best sender throughput. The receiver handles the rest.</p>
+            <div id="specs" class="helper">Waiting for an image to upload…</div>
           </div>
         </div>
       </section>
       <section class="card">
-        <div class="card-title"><h2>Live sender</h2></div>
-        <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
-        <div id="specs" class="hint">Loading payload…</div>
+        <div class="card-title"><h2>Transfer settings</h2></div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="cfg-fps">Frame rate</label>
+            <select id="cfg-fps">
+              <option>10</option>
+              <option>15</option>
+              <option>20</option>
+              <option>24</option>
+              <option selected>30</option>
+              <option>60</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cfg-bytes">Bytes per frame</label>
+            <select id="cfg-bytes">
+              <option>500</option>
+              <option>1000</option>
+              <option>1465</option>
+              <option>1850</option>
+              <option>2331</option>
+              <option selected>2953</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cfg-ecc">Error correction</label>
+            <select id="cfg-ecc">
+              <option selected>L</option>
+              <option>M</option>
+              <option>Q</option>
+              <option>H</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cfg-size">Display size</label>
+            <input id="cfg-size" type="range" min="300" max="1200" step="50" value="900" />
+          </div>
+        </div>
+        <p class="helper" style="margin-top: 12px;">Defaults are tuned for reliable 30 FPS transfers with large QR frames for strong throughput.</p>
       </section>
       <section class="card">
-        <div class="card-title"><h2>Ready to transfer</h2></div>
-        <p class="hint">Max screen brightness helps. Keep the receiver centered on the code. The stream loops forever — stop when the receiver says done.</p>
+        <div class="card-title"><h2>Live sender</h2></div>
+        <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
       </section>
     </main>
     <script type="module" src="./main.ts"></script>

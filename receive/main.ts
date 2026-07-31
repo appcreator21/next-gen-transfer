@@ -16,12 +16,11 @@ const MAX_DECODE_WIDTH = 960;
 
 const startBtn = document.getElementById("start") as HTMLButtonElement;
 const video = document.getElementById("video") as HTMLVideoElement;
-const preview = document.getElementById("preview")!;
+const preview = document.getElementById("preview") as HTMLDivElement;
 const stats = document.getElementById("stats")!;
 const progressEl = document.getElementById("progress")!;
 const bar = document.getElementById("bar")!;
 const result = document.getElementById("result")!;
-const settings = document.getElementById("settings") as HTMLDetailsElement;
 const metricsEl = document.getElementById("metrics")!;
 const metric = (id: string) => document.getElementById(id)!;
 
@@ -37,7 +36,10 @@ const busy: boolean[] = [];
 const captureTimes: number[] = [];
 const decodeTimes: number[] = [];
 
-startBtn.onclick = () => void start();
+startBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  void start();
+});
 
 async function start() {
   if (!navigator.mediaDevices?.getUserMedia) {
@@ -51,10 +53,11 @@ async function start() {
   const captureWidth = Number((document.getElementById("cfg-width") as HTMLSelectElement).value);
   const captureFps = Number((document.getElementById("cfg-capfps") as HTMLSelectElement).value);
   const workerCount = Number((document.getElementById("cfg-workers") as HTMLSelectElement).value);
-  settings.style.display = "none";
-  startBtn.style.display = "none";
+  startBtn.disabled = true;
+  startBtn.textContent = "Starting…";
   preview.style.display = "block";
   metricsEl.style.display = "grid";
+  progressEl.style.display = "block";
   const base: MediaTrackConstraints = {
     facingMode: "environment",
     width: { ideal: captureWidth },
@@ -73,6 +76,8 @@ async function start() {
       });
     }
   } catch (err) {
+    startBtn.disabled = false;
+    startBtn.textContent = "Start camera";
     stats.textContent = `✗ camera: ${err instanceof Error ? err.message : String(err)}`;
     return;
   }
@@ -171,6 +176,7 @@ function finish(payload: Uint8Array, hashOk: boolean, seconds: number, totalLen:
   captureGen++;
   stream?.getTracks().forEach((t) => t.stop());
   preview.style.display = "none";
+  progressEl.style.display = "none";
   bar.style.width = "100%";
   const kb = Math.round(totalLen / 1024);
   const rate = (totalLen / 1024 / seconds).toFixed(1);

@@ -14,24 +14,24 @@
         <a href="./receive">Receive</a>
       </nav>
     </header>
-    <main class="hero">
-      <div class="hero-grid">
-        <div>
-          <p class="eyebrow">Offline image transfer</p>
-          <h1>Send images through animated QR without Wi-Fi, Bluetooth, or pairing.</h1>
-          <p>Upload a photo on one device, show the sender screen, and let another device rebuild the image from the camera. Works with payloads up to 4 MB.</p>
-          <div class="hero-actions">
-            <a class="button" href="./send">Send</a>
-            <a class="button" href="./receive">Receive</a>
+    <main class="main-content">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Offline image transfer</p>
+            <h1>Send images through animated QR without Wi‑Fi, Bluetooth, or pairing.</h1>
+            <p>Upload a photo on one device, display the sender screen, and reconstruct it on another device through the camera. This works entirely offline and supports images up to 4 MB.</p>
+            <div class="hero-actions">
+              <a class="button" href="./send">Send image</a>
+              <a class="button" href="./receive">Receive image</a>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><h2>How it works</h2></div>
+            <p>One device uploads a photo, streams it as a fountain-coded QR animation, and the other device scans it in real time. Frames can be dropped and still recover the full image.</p>
           </div>
         </div>
-        <div class="features">
-          <div class="feature"><h3>Screen-to-camera</h3><p>No network needed — the sender displays QR frames and the receiver pulls data from the camera.</p></div>
-          <div class="feature"><h3>Fountain code</h3><p>Every frame is self-describing and redundant, so the receiver can recover the file even if some scans fail.</p></div>
-          <div class="feature"><h3>Large payloads</h3><p>Transfer images up to 4 MB using the built-in upload workflow and optimized QR streaming.</p></div>
-          <div class="feature"><h3>Fast setup</h3><p>Launch the sender quickly, press one button, and start receiving with minimal steps.</p></div>
-        </div>
-      </div>
+      </section>
     </main>
   </body>
 </html>

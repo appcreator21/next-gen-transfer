@@ -18,28 +18,17 @@ import { HEADER_LEN, fnv1a, packFrame, type FrameHeader } from "../shared/protoc
 
 const MARGIN = 4; // quiet-zone modules
 const LOOKAHEAD = 3;
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 
 const canvas = document.getElementById("qr") as HTMLCanvasElement;
 const specs = document.getElementById("specs")!;
-const cfgPayload = document.getElementById("cfg-payload") as HTMLSelectElement;
 const cfgFps = document.getElementById("cfg-fps") as HTMLSelectElement;
 const cfgBytes = document.getElementById("cfg-bytes") as HTMLSelectElement;
 const cfgEcc = document.getElementById("cfg-ecc") as HTMLSelectElement;
 const cfgSize = document.getElementById("cfg-size") as HTMLInputElement;
 
-const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
-const payloadCache = new Map<string, Uint8Array>();
 let generation = 0; // bumped on every restart; stale loops see it and die
-
-async function loadPayload(url: string): Promise<Uint8Array | null> {
-  const hit = payloadCache.get(url);
-  if (hit) return hit;
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const bytes = new Uint8Array(await res.arrayBuffer());
-  payloadCache.set(url, bytes);
-  return bytes;
-}
+let payload: Uint8Array | null = null;
 
 async function main() {
   const fileInput = document.getElementById("file-input") as HTMLInputElement | null;
@@ -48,37 +37,24 @@ async function main() {
       const f = fileInput.files?.[0];
       if (!f) return;
       if (f.size > MAX_UPLOAD_BYTES) {
+        payload = null;
         specs.textContent = `✗ file too large — max ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)} MB`;
         return;
       }
-      specs.textContent = `loading uploaded file…`;
+      specs.textContent = "loading uploaded image…";
       try {
         const ab = await f.arrayBuffer();
-        const bytes = new Uint8Array(ab);
-        payloadCache.set("uploaded", bytes);
-        cfgPayload.value = "uploaded";
+        payload = new Uint8Array(ab);
         void startStream();
       } catch {
-        specs.textContent = `✗ couldn't read file`;
+        payload = null;
+        specs.textContent = "✗ couldn't read image";
       }
     });
   }
 
-  for (const el of [cfgPayload, cfgFps, cfgBytes, cfgEcc, cfgSize]) {
+  for (const el of [cfgFps, cfgBytes, cfgEcc, cfgSize]) {
     el.addEventListener("change", () => void startStream());
-  }
-
-  const fastBtn = document.getElementById("fast-mode") as HTMLButtonElement | null;
-  if (fastBtn) {
-    fastBtn.addEventListener("click", () => {
-      // Fast preset: 30 FPS and largest bytes/frame (V40), low ECC for max goodput.
-      cfgFps.value = "30";
-      cfgBytes.value = "2953";
-      cfgEcc.value = "L";
-      cfgSize.value = "900";
-      specs.textContent = `Fast mode — 30 FPS · 2953 B/frame · ECC L`;
-      void startStream();
-    });
   }
 
   await startStream();
@@ -92,9 +68,9 @@ async function main() {
 
 async function startStream() {
   const gen = ++generation;
-  const payload = await loadPayload(cfgPayload.value);
-  if (!payload) {
-    specs.textContent = `✗ couldn't load ${cfgPayload.value}`;
+  const imageBytes = payload;
+  if (!imageBytes) {
+    specs.textContent = "Upload an image to start streaming.";
     return;
   }
   if (gen !== generation) return; // superseded while fetching
@@ -105,14 +81,14 @@ async function startStream() {
 
   const sessionId = (Math.floor(Math.random() * 0xffff) + 1) & 0xffff;
   const blockLen = frameBytes - HEADER_LEN;
-  const encoder = new LTEncoder(payload, blockLen, sessionId);
+  const encoder = new LTEncoder(imageBytes, blockLen, sessionId);
   const header: FrameHeader = {
     sessionId,
     seq: 0,
     k: encoder.k,
     blockLen,
-    totalLen: payload.length,
-    payloadFnv: fnv1a(payload),
+    totalLen: imageBytes.length,
+    payloadFnv: fnv1a(imageBytes),
   };
 
   let version: number | undefined; // locked after the first frame
@@ -149,7 +125,7 @@ async function startStream() {
       sizeCanvas();
       specs.textContent =
         `${txFps} FPS · ${frameBytes} bytes per frame · V${version} · ECC ${ecc} · ` +
-        `${Math.round(payload.length / 1024)} KB payload · K=${encoder.k}`;
+        `${Math.round(imageBytes.length / 1024)} KB payload · K=${encoder.k}`;
     }
     const size = qr.modules.size;
     const data = qr.modules.data;
