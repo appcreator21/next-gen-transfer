@@ -17,7 +17,13 @@
           <select id="cfg-payload">
             <option value="../success.png" selected>512 KB image</option>
             <option value="../success-2mb.png">2 MB image</option>
+            <option value="uploaded">(uploaded image)</option>
           </select>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px">
+          upload
+          <input id="file-input" type="file" accept="image/*" />
+          <small style="opacity:0.9">max 2 MB</small>
         </label>
         <label>
           tx fps

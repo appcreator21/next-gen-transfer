@@ -41,6 +41,28 @@ async function loadPayload(url: string): Promise<Uint8Array | null> {
 }
 
 async function main() {
+  const fileInput = document.getElementById("file-input") as HTMLInputElement | null;
+  if (fileInput) {
+    fileInput.addEventListener("change", async () => {
+      const f = fileInput.files?.[0];
+      if (!f) return;
+      if (f.size > 2 * 1024 * 1024) {
+        specs.textContent = `✗ file too large — max 2 MB`;
+        return;
+      }
+      specs.textContent = `loading uploaded file…`;
+      try {
+        const ab = await f.arrayBuffer();
+        const bytes = new Uint8Array(ab);
+        payloadCache.set("uploaded", bytes);
+        cfgPayload.value = "uploaded";
+        void startStream();
+      } catch (err) {
+        specs.textContent = `✗ couldn't read file`;
+      }
+    });
+  }
+
   for (const el of [cfgPayload, cfgFps, cfgBytes, cfgEcc, cfgSize]) {
     el.addEventListener("change", () => void startStream());
   }
