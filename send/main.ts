@@ -67,6 +67,20 @@ async function main() {
   for (const el of [cfgPayload, cfgFps, cfgBytes, cfgEcc, cfgSize]) {
     el.addEventListener("change", () => void startStream());
   }
+
+  const fastBtn = document.getElementById("fast-mode") as HTMLButtonElement | null;
+  if (fastBtn) {
+    fastBtn.addEventListener("click", () => {
+      // Fast preset: highest FPS and largest bytes/frame (V40), low ECC for max goodput.
+      cfgFps.value = "60";
+      cfgBytes.value = "2953";
+      cfgEcc.value = "L";
+      cfgSize.value = "900";
+      specs.textContent = `Fast mode — 60 FPS · 2953 B/frame · ECC L`;
+      void startStream();
+    });
+  }
+
   await startStream();
   try {
     await (navigator as Navigator & { wakeLock?: { request(t: "screen"): Promise<unknown> } })
